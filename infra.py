@@ -7,7 +7,7 @@ height = 700
 background = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Client")
 numLetters = 5
-numGuesses = 6
+rowLimit = 6
 allWords = set()
 
 pygame.font.init()
@@ -130,8 +130,9 @@ class Row():
         tileSize = width // (numLetters + 2)
         xPointer = width // (numLetters)
         yPointer = tileSize + 2
+
         for l in range(numLetters):
-            tile = Tile(letter = "", pos = (xPointer, self.level * yPointer), size = tileSize)
+            tile = Tile(letter = "", pos = (xPointer, (self.level) * yPointer), size = tileSize)
             tiles.append(tile)
             xPointer += tile.size + 2
 
@@ -194,10 +195,10 @@ class Row():
         for idx in range(numLetters):
             letter = self.tiles[idx].letter.lower()
             tile = self.tiles[idx]
-            print(letter)
+            #print(letter)
             if letter in correctFreq and tile.color != colorDict["green"]:
                 tile.color = colorDict["yellow"]
-                print("yellow!")
+                #print("yellow!")
                 if letter not in usedLetters or usedLetters[letter] != "green":
                     usedLetters[letter] = "yellow"
                 correctFreq[letter] -= 1
@@ -205,7 +206,7 @@ class Row():
                     del correctFreq[letter]
             elif letter not in correctWord:
                 usedLetters[letter] = "red"
-            print()
+            #print()
         if wrong:
             return ("wrong", usedLetters, guess)
         return ("correct", usedLetters, guess)
@@ -214,19 +215,36 @@ class Grid():
     def __init__(self, correctWord):
         rows = []
         level = 1
-        for l in range(numGuesses):
+        for l in range(rowLimit):
             rows.append(Row(level))
             level += 1
+        self.firstRow = 0 #index
+        self.lastRow = rowLimit
         self.rows = rows
         self.level = 0
         self.correctWord = correctWord
 
     def draw(self, hide):
-        for row in self.rows:
-            row.draw(hide)
+        for idx in range(self.firstRow, self.lastRow):
+            self.rows[idx].draw(hide)
+        # for row in self.rows:
+        #     row.draw(hide)
 
     def update(self, key, usedLetters):
+        # if self.level >= rowLimit:
+        #     print(self.level)
+        #     self.rows.append(Row(self.level))
+        #     self.level += 1
+
         if key == "return" and self.rows[self.level].currentTile == numLetters:
+            print(self.level)
+            if self.level >= rowLimit - 1:
+                self.rows.append(Row(self.level))
+                self.level += 1
+                self.firstRow += 1
+                self.lastRow += 1
+
+            #print(self.level, self.firstRow, self.lastRow)
             result, updatedLetters, guess = self.rows[self.level].validate_word(usedLetters, self.correctWord)
             if result == "invalid":
                 n = Notification(f"{guess} is not a valid word!", "alert")
@@ -341,12 +359,12 @@ class KeyBoard():
                 key.hide = True
             key.draw()
 class Notification():
-    def __init__(self, text, kind = "neutral"):
+    def __init__(self, text, kind = "neutral", fontSize = 15):
         self.x = width/2
         self.y = 5
         self.width = width - .25*width
         self.height = 30
-        self.fontSize = 15
+        self.fontSize = fontSize
         self.text = text
 
         if kind == "warning":
@@ -387,15 +405,17 @@ def play_game(game, p, btns):
         notif = Notification("Waiting for other player to join...")
         notif.draw()
     else:
-        switchBoard, lockInfo, randWord = btns
+        switchBoard, lockInfo, randWord, up, down = btns
         if game.readyToSend[p]:
             lockInfo.color = colorDict["green"]
         randWord.draw()
         switchBoard.draw()
         lockInfo.draw()
+        up.draw()
+        down.draw()
 
         # Turn taking
-        oppWord = Notification(f"Opponents word: {game.words[1-p]}  Mode: {game.mode}")
+        oppWord = Notification(f"Opponents word: {game.words[1-p]}  Mode: {game.mode}", fontSize = 9)
         oppWord.y = 30
         oppWord.draw()
 

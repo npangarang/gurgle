@@ -16,8 +16,11 @@ def main():
     switchBoard = Button("Your Board", (250, 540), (100, 40), (152, 226, 247), 15)
     lockInfo = Button("Send", (350, 540), (60, 40), colorDict["grey"], 15)
     randWord = Button("hehe", (100,540), (60, 40), colorDict["red"], 15)
+    up = Button("^", (400, 505), (30,30), colorDict["grey"], 20)
+    down = Button("v", (400, 540), (30, 30), colorDict["grey"], 15)
 
-    btns = [switchBoard, lockInfo, randWord]
+
+    btns = [switchBoard, lockInfo, randWord, up, down]
     #btns = [Button("Your opponent's word is: ")]
 
     while run:
@@ -88,7 +91,10 @@ def main():
                     word = choose_word()
                     game = n.send(f"pickRandom{word}")
 
-
+                if up.click(pos):
+                    game.scroll(player, "up")
+                if down.click(pos):
+                    game.scroll(player, "down")
 
 
                 # for btn in btns:

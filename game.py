@@ -25,6 +25,12 @@ class Game:
         self.playerKeyboards = [KeyBoard(), KeyBoard()]
         self.playerViews = [0,0]
 
+    # def scroll(self, p, direction):
+    #     grid = game.playerGrids[p]
+    #     if direction == "down" and grid.firstRow == 0:
+
+
+
     def exchange_info(self, p):
         grid = self.playerGrids[1 - p]
         keyboard = self.playerKeyboards[1-p]
