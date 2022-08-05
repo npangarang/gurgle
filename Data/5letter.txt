@@ -3477,7 +3477,6 @@ bongo
 toves
 credo
 basal
-yella
 aglow
 glean
 gusto
@@ -3490,7 +3489,6 @@ swash
 aleph
 tinny
 itchy
-wanta
 trice
 jowls
 gongs
@@ -3508,7 +3506,6 @@ penal
 obese
 sonny
 quirt
-mebbe
 tacit
 greek
 xenon
@@ -3949,7 +3946,6 @@ rusks
 avast
 swami
 boded
-ahhhh
 lobed
 natch
 shish

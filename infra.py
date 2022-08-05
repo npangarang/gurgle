@@ -128,16 +128,32 @@ class Row():
         self.level = level
         tiles = []
         tileSize = width // (numLetters + 2)
-        xPointer = width // (numLetters)
-        yPointer = tileSize + 2
+        self.xPointer = width // (numLetters)
+        self.yPointer = tileSize + 2
+
+        x = self.xPointer
 
         for l in range(numLetters):
-            tile = Tile(letter = "", pos = (xPointer, (self.level) * yPointer), size = tileSize)
+            tile = Tile(letter = "", pos = (x, (self.level) * self.yPointer), size = tileSize)
             tiles.append(tile)
-            xPointer += tile.size + 2
+            x += tile.size + 2
+
+        # for l in range(numLetters):
+        #     tile = Tile(letter = "", pos = (xPointer, (yPos) * yPointer), size = tileSize)
+        #     tiles.append(tile)
+        #     xPointer += tile.size + 2
 
         self.tiles = tiles
         self.currentTile = 0
+
+    def scroll(self, direction):
+        x = self.xPointer
+        for tile in self.tiles:
+            if direction == "up":
+                tile.pos = (x, (self.level - 1) * self.yPointer)
+            elif direction == "down":
+                tile.pos = (x, (self.level + 1) * self.yPointer)
+
 
     def draw(self, hide):
         for tile in self.tiles:
@@ -237,10 +253,10 @@ class Grid():
         #     self.level += 1
 
         if key == "return" and self.rows[self.level].currentTile == numLetters:
-            print(self.level)
+            print(self.firstRow, self.lastRow, self.level)
             if self.level >= rowLimit - 1:
-                self.rows.append(Row(self.level))
                 self.level += 1
+                self.rows.append(Row(self.level + 1))
                 self.firstRow += 1
                 self.lastRow += 1
 
